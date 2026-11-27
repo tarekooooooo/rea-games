@@ -138,6 +138,20 @@ test("a missing Godot names the binary and points to REA_GODOT", () => {
     fs.rmSync(root, { recursive: true, force: true });
   }
 });
+test("a Godot binary that cannot be run is named once and points to REA_GODOT", () => {
+  const root = makeRoot({ a: { godot: { cmd: ["godot", "--headless"] } } });
+  fs.copyFileSync(path.join(root, "games", "a", "cases", "one.json"), path.join(root, "games", "a", "cases", "two.json"));
+  const saved = process.env.REA_GODOT;
+  process.env.REA_GODOT = os.tmpdir();
+  try {
+    const [r] = verifyGames(root, ["a"], null, quiet);
+    assert.deepEqual([r.cases, r.passed], [2, 0]);
+    assert.deepEqual(r.failures.map((f) => f.problem), [`${os.tmpdir()} cannot be run (not an executable file; set REA_GODOT to the Godot 4.4 binary`]);
+  } finally {
+    if (saved === undefined) delete process.env.REA_GODOT; else process.env.REA_GODOT = saved;
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
 
 test("a port killed by a signal says which signal", () => {
   const killed = { cmd: ["node", "-e", "process.kill(process.pid, 'SIGKILL')"] };

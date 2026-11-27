@@ -99,7 +99,7 @@ test("a crashed Node port whose message goes on in lines that are not indented k
 
 test("a game with no recorded cases fails and says to record", () => {
   const root = makeRoot({ a: { web: {} }, b: { web: {} } });
-  fs.rmSync(path.join(root, "games", "a", "cases", "one.json"));
+  fs.rmSync(path.join(root, "games", "a", "cases"), { recursive: true, force: true });
   try {
     const lines = [];
     const results = verifyGames(root, ["a", "b"], null, (l) => lines.push(l));

@@ -193,3 +193,17 @@ test("verify all --port skips games without that port, but fails when no game ha
   assert.equal(named.status, 1);
   assert.match(named.stdout, /FAIL bricks has no port "bevy" \(has: web\)/);
 });
+
+test("record with two game names exits 2 and says it takes one game", () => {
+  const r = run("record", "mines", "paddles");
+  assert.equal(r.status, 2);
+  assert.equal(r.stdout, "");
+  assert.equal(r.stderr.trim(), "rea-games: record takes one game, got: mines paddles");
+});
+
+test("record all prints the record usage and exits 2", () => {
+  const r = run("record", "all");
+  assert.equal(r.status, 2);
+  assert.equal(r.stdout, "");
+  assert.match(r.stderr, /^usage: rea-games record <game>   \(games: 2048, [^)]+\)$/m);
+});

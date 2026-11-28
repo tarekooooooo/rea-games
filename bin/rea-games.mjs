@@ -63,12 +63,12 @@ async function main() {
     return;
   }
   if (cmd === "record") {
-    if (!rest[0]) {
+    if (!rest[0] || rest[0] === "all") {
       console.error(`usage: rea-games record <game>   (games: ${listGames(root).join(", ")})`);
       process.exit(2);
     }
     if (rest.length > 1) {
-      console.error(`rea-games: record takes one game (or all), got: ${rest.join(" ")}`);
+      console.error(`rea-games: record takes one game, got: ${rest.join(" ")}`);
       process.exit(2);
     }
     const g = rest[0];
